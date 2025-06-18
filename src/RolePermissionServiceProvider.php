@@ -1,0 +1,44 @@
+<?php
+
+namespace AliSultan\RolePermission;
+
+use Illuminate\Support\ServiceProvider;
+
+class RolePermissionServiceProvider extends ServiceProvider
+{
+    public function boot()
+    {
+        // Publish config
+        $this->publishes([
+            __DIR__ . '/../config/role-permission.php' => config_path('role-permission.php'),
+        ], 'config');
+
+        // Publish migrations
+        $this->publishes([
+            __DIR__ . '/../database/migrations/' => database_path('migrations'),
+        ], 'migrations');
+
+        // Publish seeders
+        $this->publishes([
+            __DIR__ . '/../database/seeders/' => database_path('seeders'),
+        ], 'seeders');
+
+        // Load migrations automatically if not published
+        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
+
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                \AliSultan\RolePermission\Console\Commands\InstallRolePermission::class,
+            ]);
+        }
+    }
+
+    public function register()
+    {
+        // Merge config to allow default config usage
+        $this->mergeConfigFrom(
+            __DIR__ . '/../config/role-permission.php',
+            'role-permission'
+        );
+    }
+}
