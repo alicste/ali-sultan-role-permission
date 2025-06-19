@@ -31,7 +31,7 @@ class InstallRolePermission extends Command
 
         $this->call('migrate', ['--force' => true]);
         $this->call('db:seed', ['--class' => 'AliSultan\\RolePermission\\Database\\Seeders\\RolePermissionSeeder']);
-
+        $this->call('\Database\Seeders\RolePermissionSeeder');
         $this->info('AliSultan RolePermission package installed successfully.');
     }
 }
