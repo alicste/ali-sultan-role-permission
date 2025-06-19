@@ -1,145 +1,56 @@
 <?php
 
-// namespace AliSultan\RolePermission;
-
-// use Illuminate\Support\ServiceProvider;
-
-// class RolePermissionServiceProvider extends ServiceProvider
-// {
-//     public function boot()
-//     {
-//         // Publish config
-//         $this->publishes([
-//             __DIR__ . '/../config/role-permission.php' => config_path('role-permission.php'),
-//         ], 'config');
-
-//         // Publish migrations
-//         $this->publishes([
-//             __DIR__ . '/../database/migrations/' => database_path('migrations'),
-//         ], 'migrations');
-
-//         // Publish seeders
-//         $this->publishes([
-//             __DIR__ . '/../database/seeders/' => database_path('seeders'),
-//         ], 'seeders');
-
-//         // Load migrations automatically if not published
-//         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
-
-//         if ($this->app->runningInConsole()) {
-//             $this->commands([
-//                 \AliSultan\RolePermission\Console\Commands\InstallRolePermission::class,
-//             ]);
-//         }
-//     }
-
-//     public function register()
-//     {
-//         // Merge config to allow default config usage
-//         $this->mergeConfigFrom(
-//             __DIR__ . '/../config/role-permission.php',
-//             'role-permission'
-//         );
-//     }
-// }
-// namespace AliSultan\RolePermission;
-// use Filament\Support\Providers\PluginServiceProvider;
-// use Spatie\LaravelPackageTools\Package;
-// class RolePermissionServiceProvider extends PluginServiceProvider
-// {
-//     public static string $name = 'role-permission';
-
-//     protected array $resources = [
-//         \AliSultan\RolePermission\Filament\Resources\PermissionGroupResource::class,
-//         \AliSultan\RolePermission\Filament\Resources\PermissionResource::class,
-//         \AliSultan\RolePermission\Filament\Resources\RoleResource::class,
-//         \AliSultan\RolePermission\Filament\Resources\UserResource::class,
-//     ];
-
-//     public function configurePackage(Package $package): void
-//     {
-//         $package->name(static::$name);
-//     }
-//     public function boot()
-//     {
-//         // ✅ Config publish
-//         $this->publishes([
-//             __DIR__ . '/../config/role-permission.php' => config_path('role-permission.php'),
-//         ], 'config');
-
-//         // ✅ Migrations publish (inside src/database/migrations)
-//         $this->publishes([
-//             __DIR__ . '/database/migrations' => database_path('migrations'),
-//         ], 'migrations');
-
-//         // ✅ Seeders publish (inside src/database/seeders)
-//         $this->publishes([
-//             __DIR__ . '/database/seeders' => database_path('seeders'),
-//         ], 'seeders');
-
-//         // ✅ Load migrations from inside src/database/migrations
-//         $this->loadMigrationsFrom(__DIR__ . '/database/migrations');
-
-//         // Register artisan command
-//         if ($this->app->runningInConsole()) {
-//             $this->commands([
-//                 \AliSultan\RolePermission\Console\Commands\InstallRolePermission::class,
-//             ]);
-//         }
-//     }
-
-//     public function register()
-//     {
-//         // ✅ Merge default config
-//         $this->mergeConfigFrom(
-//             __DIR__ . '/../config/role-permission.php',
-//             'role-permission'
-//         );
-//     }
-// }
-
-
 namespace AliSultan\RolePermission;
 
-use Filament\Support\Providers\PluginServiceProvider;
-use Spatie\LaravelPackageTools\Package;
-use Spatie\LaravelPackageTools\PackageServiceProvider;
+use Illuminate\Support\ServiceProvider;
+use Filament\Facades\Filament;
 
-class RolePermissionServiceProvider extends PluginServiceProvider
+class RolePermissionServiceProvider extends ServiceProvider
 {
-    public static string $name = 'role-permission';
-
-    protected array $resources = [
-        \AliSultan\RolePermission\Filament\Resources\PermissionGroupResource::class,
-        \AliSultan\RolePermission\Filament\Resources\PermissionResource::class,
-        \AliSultan\RolePermission\Filament\Resources\RoleResource::class,
-        \AliSultan\RolePermission\Filament\Resources\UserResource::class,
-    ];
-
-    protected array $commands = [
-        \AliSultan\RolePermission\Console\Commands\InstallRolePermission::class,
-    ];
-
-    public function configurePackage(Package $package): void
+    public function register()
     {
-        $package
-            ->name(self::$name)
-            ->hasConfigFile('role-permission')
-            ->hasMigrations([
-                '2025_06_18_000001_create_permission_groups_table',
-                '2025_06_18_000002_add_built_in_and_user_type_to_roles_table',
-                '2025_06_18_000003_add_permission_group_id_to_permissions_table',
-            ])
-            ->hasSeeders([
-                \AliSultan\RolePermission\Database\Seeders\RolePermissionSeeder::class,
-            ])
-            ->hasInstallCommand(function ($command) {
-                $command
-                    ->publishConfigFile()
-                    ->publishMigrations()
-                    ->publishSeeders()
-                    ->migrate()
-                    ->seed();
-            });
+        // Merge config
+        $this->mergeConfigFrom(
+            __DIR__ . '/../config/role-permission.php',
+            'role-permission'
+        );
+    }
+
+    public function boot()
+    {
+        // Publish config
+        $this->publishes([
+            __DIR__ . '/../config/role-permission.php' => config_path('role-permission.php'),
+        ], 'config');
+
+        // Publish migrations
+        $this->publishes([
+            __DIR__ . '/database/migrations' => database_path('migrations'),
+        ], 'migrations');
+
+        // Publish seeders
+        $this->publishes([
+            __DIR__ . '/database/seeders' => database_path('seeders'),
+        ], 'seeders');
+
+        // Auto-load migrations
+        $this->loadMigrationsFrom(__DIR__ . '/database/migrations');
+
+        // Register Filament resources manually (optional)
+        if (class_exists(Filament::class)) {
+            Filament::registerResources([
+                \AliSultan\RolePermission\Filament\Resources\PermissionGroupResource::class,
+                \AliSultan\RolePermission\Filament\Resources\PermissionResource::class,
+                \AliSultan\RolePermission\Filament\Resources\RoleResource::class,
+                \AliSultan\RolePermission\Filament\Resources\UserResource::class,
+            ]);
+        }
+
+        // Register Artisan commands
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                \AliSultan\RolePermission\Console\Commands\InstallRolePermission::class,
+            ]);
+        }
     }
 }
