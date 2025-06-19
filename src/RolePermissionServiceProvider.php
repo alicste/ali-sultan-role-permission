@@ -43,11 +43,27 @@
 //     }
 // }
 namespace AliSultan\RolePermission;
-
-use Illuminate\Support\ServiceProvider;
-
-class RolePermissionServiceProvider extends ServiceProvider
+use Filament\PluginServiceProvider;
+use Spatie\LaravelPackageTools\Package;
+use AliSultan\RolePermission\Filament\Resources\PermissionGroupResource;
+use AliSultan\RolePermission\Filament\Resources\PermissionResource;
+use AliSultan\RolePermission\Filament\Resources\RoleResource;
+use AliSultan\RolePermission\Filament\Resources\UserResource;
+class RolePermissionServiceProvider extends PluginServiceProvider
 {
+    public static string $name = 'role-permission';
+
+    protected array $resources = [
+        \AliSultan\RolePermission\Filament\Resources\PermissionGroupResource::class,
+        \AliSultan\RolePermission\Filament\Resources\PermissionResource::class,
+        \AliSultan\RolePermission\Filament\Resources\RoleResource::class,
+        \AliSultan\RolePermission\Filament\Resources\UserResource::class,
+    ];
+
+    public function configurePackage(Package $package): void
+    {
+        $package->name(static::$name);
+    }
     public function boot()
     {
         // ✅ Config publish
