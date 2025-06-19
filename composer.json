@@ -1,23 +1,28 @@
 {
     "name": "ali-sultan/ali-sultan-role-permission",
-    "description": "Advanced Laravel Filament Role & Permission Package with multi-level hierarchical RBAC",
+    "description": "Advanced Laravel Filament Role & Permission Package with multi-level hierarchical RBAC.",
     "type": "library",
     "license": "MIT",
     "authors": [
         {
             "name": "Ali Sultan",
-            "email": "your.email@example.com"
+            "email": "mdali.nstu@gmail.com"
         }
     ],
     "require": {
         "php": "^8.1",
         "laravel/framework": "^10.0|^11.0",
         "filament/filament": "^3.0",
-        "spatie/laravel-permission": "^5.7"
+        "spatie/laravel-permission": "^6.20"
     },
     "autoload": {
         "psr-4": {
             "AliSultan\\RolePermission\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "AliSultan\\RolePermission\\Tests\\": "tests/"
         }
     },
     "extra": {
@@ -26,5 +31,7 @@
                 "AliSultan\\RolePermission\\RolePermissionServiceProvider"
             ]
         }
-    }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
