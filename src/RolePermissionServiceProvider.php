@@ -43,12 +43,8 @@
 //     }
 // }
 namespace AliSultan\RolePermission;
-use Filament\PluginServiceProvider;
+use Filament\Support\Providers\PluginServiceProvider;
 use Spatie\LaravelPackageTools\Package;
-use AliSultan\RolePermission\Filament\Resources\PermissionGroupResource;
-use AliSultan\RolePermission\Filament\Resources\PermissionResource;
-use AliSultan\RolePermission\Filament\Resources\RoleResource;
-use AliSultan\RolePermission\Filament\Resources\UserResource;
 class RolePermissionServiceProvider extends PluginServiceProvider
 {
     public static string $name = 'role-permission';
